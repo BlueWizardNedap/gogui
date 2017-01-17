@@ -52,6 +52,33 @@ public class GoGUIIntegrator implements GOGUI {
     }
 
     @Override
+    public synchronized void addAreaIndicator(int x, int y, boolean white) {
+        Platform.runLater(() -> {
+            try {
+                wrappee.addAreaIndicator(x, y, white);
+            } catch (InvalidCoordinateException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    public synchronized void addHintIndicator(int x, int y) {
+        Platform.runLater(() -> {
+            try {
+                wrappee.addHintIndicator(x, y);
+            } catch (InvalidCoordinateException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    public synchronized void removeHintIdicator() {
+        Platform.runLater(() -> wrappee.removeHintIdicator());
+    }
+
+    @Override
     public synchronized void clearBoard() {
         Platform.runLater(() -> wrappee.clearBoard());
     }
