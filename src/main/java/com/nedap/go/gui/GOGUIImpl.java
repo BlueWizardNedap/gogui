@@ -9,8 +9,10 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 
@@ -33,12 +35,14 @@ public class GOGUIImpl extends Application {
     private List<Line> boardLines = new ArrayList<>();
     private Group root = null;
     private Stage primaryStage = null;
+    private Node hint = null;
 
     private boolean mode3D = true;
     private boolean showStartupAnimation = false;
 
     private final PhongMaterial blackMaterial = new PhongMaterial();
     private final PhongMaterial whiteMaterial = new PhongMaterial();
+    private final PhongMaterial yellowMaterial = new PhongMaterial();
 
     private static final CountDownLatch waitForConfigurationLatch = new CountDownLatch(1);
     private static final CountDownLatch initializationLatch = new CountDownLatch(1);
@@ -100,6 +104,8 @@ public class GOGUIImpl extends Application {
         blackMaterial.setSpecularColor(Color.LIGHTBLUE);
         whiteMaterial.setDiffuseColor(Color.WHITE);
         whiteMaterial.setSpecularColor(Color.LIGHTBLUE);
+        yellowMaterial.setDiffuseColor(Color.YELLOW);
+        yellowMaterial.setSpecularColor(Color.LIGHTBLUE);
     }
 
     private void runStartupAnimation() {
@@ -178,6 +184,16 @@ public class GOGUIImpl extends Application {
         }
 
         root.getChildren().addAll(boardLines);
+
+        if (mode3D){
+            hint = new Sphere(currentSquareSize / 2);
+            ((Sphere) hint).setMaterial(yellowMaterial);
+        } else {
+            hint = new Circle(currentSquareSize / 2);
+            ((Circle) hint).setFill(Color.YELLOW);
+        }
+        hint.setVisible(false);
+        root.getChildren().add(hint);
     }
 
     private void drawDiagonalStoneLine(int diagonal, Boolean stoneType, boolean flip) {
@@ -242,6 +258,40 @@ public class GOGUIImpl extends Application {
             root.getChildren().remove(board[x][y]);
         }
         board[x][y] = null;
+    }
+
+    protected void addAreaIndicator(int x, int y, boolean white) throws InvalidCoordinateException {
+        checkCoordinates(x, y);
+        removeStone(x, y);
+
+        if (mode3D){
+            Box areaStone = new Box(currentSquareSize / 3, currentSquareSize / 3, currentSquareSize / 3);
+            areaStone.setMaterial(white ? whiteMaterial : blackMaterial);
+            areaStone.setTranslateX(((x + 1) * currentSquareSize));
+            areaStone.setTranslateY(((y + 1) * currentSquareSize));
+            board[x][y] = areaStone;
+            root.getChildren().add(areaStone);
+        } else {
+            Rectangle areaStone = new Rectangle(
+                ((x + 1) * currentSquareSize) - currentSquareSize / 6,
+                ((y + 1) * currentSquareSize) - currentSquareSize / 6,
+                currentSquareSize / 3,
+                currentSquareSize / 3
+            );
+            areaStone.setFill(white ? Color.WHITE : Color.BLACK);
+            board[x][y] = areaStone;
+            root.getChildren().add(areaStone);
+        }
+    }
+
+    protected void addHintIndicator(int x, int y) throws InvalidCoordinateException {
+        hint.setTranslateX(((x + 1) * currentSquareSize));
+        hint.setTranslateY(((y + 1) * currentSquareSize));
+        hint.setVisible(true);
+    }
+
+    protected void removeHintIdicator() {
+        hint.setVisible(false);
     }
 
     private void checkCoordinates(int x, int y) throws InvalidCoordinateException {
