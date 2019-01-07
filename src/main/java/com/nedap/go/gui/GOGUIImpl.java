@@ -21,8 +21,10 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-
-public class GOGUIImpl extends Application {
+/**
+ * @author Daan van Beek
+ */
+public class GoGuiImpl extends Application {
 
     private final static int INITIAL_BOARD_SIZE = 19;
     private final static int INITIAL_SQUARE_SIZE = 50;
@@ -47,18 +49,14 @@ public class GOGUIImpl extends Application {
     private static final CountDownLatch waitForConfigurationLatch = new CountDownLatch(1);
     private static final CountDownLatch initializationLatch = new CountDownLatch(1);
 
-    private static GOGUIImpl instance;
+    private static GoGuiImpl instance;
 
     protected static boolean isInstanceAvailable() {
         return instance != null;
     }
 
-    public static GOGUIImpl getInstance() {
+    public static GoGuiImpl getInstance() {
         return instance;
-    }
-
-    public GOGUIImpl() {
-        // Has to be public otherwise JavaFX cannot find it
     }
 
     protected void countDownConfigurationLatch() {
@@ -115,6 +113,7 @@ public class GOGUIImpl extends Application {
             int roundCount = 0;
             int lastX = 0;
 
+            @Override
             public void handle(long currentNanoTime) {
                 double t = (currentNanoTime - startNanoTime) / 50000000.0;
 
@@ -331,15 +330,18 @@ public class GOGUIImpl extends Application {
 
     protected static void startGUI() {
         new Thread() {
+
+            @Override
             public void run() {
-                Application.launch(GOGUIImpl.class);
+                Application.launch(GoGuiImpl.class);
             }
+
         }.start();
     }
 
     protected void waitForInitializationLatch() {
         try {
-            System.out.println("Attempting init of the GOGUI!");
+            System.out.println("Attempting init of the GoGui!");
             if (!initializationLatch.await(30, TimeUnit.SECONDS)) {
                 System.out.println("Initialization of the GOGUI failed!");
             }

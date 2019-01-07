@@ -1,9 +1,9 @@
 package com.nedap.go.gui;
 
 /**
- * Created by daan.vanbeek on 13-12-16.
+ * @author Daan van Beek
  */
-public interface GOGUI {
+public interface GoGui {
 
     /**
      * Sets the board width and height to the given value. Adjusts the window size accordingly.

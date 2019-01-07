@@ -3,11 +3,11 @@ package com.nedap.go.gui;
 import javafx.application.Platform;
 
 /**
- * Created by daan.vanbeek on 13-12-16.
+ * @author Daan van Beek
  */
-public class GoGUIIntegrator implements GOGUI {
+public class GoGuiIntegrator implements GoGui {
 
-    private GOGUIImpl wrappee;
+    private GoGuiImpl wrappee;
 
     /**
      * Creates a GoGUIIntegrator that is capable of configuring and controlling the GO GUI.
@@ -15,7 +15,7 @@ public class GoGUIIntegrator implements GOGUI {
      * @param mode3D if true then the stones will be shown in 3D. Otherwise a 2D representation will be used.
      * @param boardSize the desired initial board size.
      */
-    public GoGUIIntegrator(boolean showStartupAnimation, boolean mode3D, int boardSize) {
+    public GoGuiIntegrator(boolean showStartupAnimation, boolean mode3D, int boardSize) {
         createWrappedObject();
         wrappee.setShowStartupAnimation(showStartupAnimation);
         wrappee.setMode3D(mode3D);
@@ -97,9 +97,9 @@ public class GoGUIIntegrator implements GOGUI {
 
     private void createWrappedObject() {
         if (wrappee == null) {
-            GOGUIImpl.startGUI();
+            GoGuiImpl.startGUI();
 
-            while (!GOGUIImpl.isInstanceAvailable()) {
+            while (!GoGuiImpl.isInstanceAvailable()) {
                 try {
                     Thread.sleep(20);
                 }
@@ -108,7 +108,7 @@ public class GoGUIIntegrator implements GOGUI {
                 }
             }
 
-            wrappee = GOGUIImpl.getInstance();
+            wrappee = GoGuiImpl.getInstance();
         }
     }
 

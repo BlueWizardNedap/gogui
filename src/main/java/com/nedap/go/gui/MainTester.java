@@ -8,7 +8,7 @@ package com.nedap.go.gui;
 public class MainTester {
 
     public static void main(String[] args) {
-        GoGUIIntegrator gogui = new GoGUIIntegrator(true, true, 9);
+        GoGuiIntegrator gogui = new GoGuiIntegrator(true, true, 9);
         gogui.startGUI();
         gogui.setBoardSize(9);
 
